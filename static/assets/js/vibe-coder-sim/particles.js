@@ -150,14 +150,78 @@ export function emitShimmer(x, y, count = 6) {
   });
 }
 
-export function emitTrail(kind, x, y, hue = 55, _cfg = {}) {
-  const map = { sparkle: emitSparkle, heart: emitHearts, shimmer: emitShimmer };
-  if (map[kind]) {
-    map[kind](x, y, hue);
+function normalizeHue(value) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return ((value % 360) + 360) % 360;
+  }
+  if (typeof value === "string" && value.trim()) {
+    const numeric = Number(value);
+    if (Number.isFinite(numeric)) {
+      return ((numeric % 360) + 360) % 360;
+    }
+  }
+  return null;
+}
+
+function hueFromHex(color) {
+  if (typeof color !== "string") return null;
+  const match = color.trim().match(/^#([\da-f]{3}|[\da-f]{6})$/i);
+  if (!match) return null;
+  const hex = match[1];
+  const normalized = hex.length === 3 ? hex.replace(/./g, (c) => c + c) : hex;
+  const r = parseInt(normalized.slice(0, 2), 16) / 255;
+  const g = parseInt(normalized.slice(2, 4), 16) / 255;
+  const b = parseInt(normalized.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+
+  if (delta === 0) return 0;
+  let base = 0;
+  if (max === r) base = ((g - b) / delta) % 6;
+  else if (max === g) base = (b - r) / delta + 2;
+  else base = (r - g) / delta + 4;
+  return (base * 60 + 360) % 360;
+}
+
+function resolveTrailHue(hue, cfg = {}) {
+  return normalizeHue(cfg.hue) ?? hueFromHex(cfg.color) ?? normalizeHue(hue) ?? 55;
+}
+
+export function emitTrail(kind, x, y, hue = 55, cfg = {}) {
+  const resolvedHue = resolveTrailHue(hue, cfg);
+  if (kind === "sparkle") {
+    emitSparkle(x, y, resolvedHue);
+  } else if (kind === "heart") {
+    emit("heart", {
+      x,
+      y,
+      spread: 10,
+      vy: -1.0,
+      vyRand: 0.8,
+      vxRand: 1.5,
+      size: 6,
+      hue: resolvedHue,
+      ttl: 1200,
+      drag: 0.95,
+      count: 2,
+    });
+  } else if (kind === "shimmer") {
+    emit("shimmer", {
+      x,
+      y,
+      spread: 16,
+      vy: -0.5,
+      vyRand: 0.8,
+      vxRand: 0.8,
+      size: 4,
+      hue: resolvedHue,
+      ttl: 1000,
+      count: 6,
+    });
   } else if (kind === "glamburst") {
     // Mythic aurora trail — a small burst of hue-cycling shimmer rather than
     // a single flat sparkle, so the top-tier trail reads as premium.
-    const base = (Date.now() / 12) % 360;
     emit("shimmer", {
       x,
       y,
@@ -166,7 +230,7 @@ export function emitTrail(kind, x, y, hue = 55, _cfg = {}) {
       vyRand: 1.0,
       vxRand: 1.3,
       size: 4,
-      hue: base,
+      hue: resolvedHue,
       ttl: 950,
       count: 2,
     });
