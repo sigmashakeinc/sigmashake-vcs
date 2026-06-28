@@ -1,8 +1,8 @@
 {
   "schema": "sigmashake-vcs-public-mirror-manifest-v1",
-  "source_commit": "c70219acd1bbc42fce143f5ee4763cfc78f2ca58",
+  "source_commit": "f25c07cfdb9842741069e24842e567b2633a7d7a",
   "source_rel": "sigmashake-vcs",
-  "generated_at": "2026-06-28T23:30:44.061901+00:00",
+  "generated_at": "2026-06-28T23:38:14.469661+00:00",
   "transform_version": "public-mirror-v1",
   "scanner_versions": {
     "gitleaks": "8.30.1",
@@ -10,6 +10,11 @@
   },
   "lpc_rows": 1096,
   "files": [
+    {
+      "path": ".gitattributes",
+      "size": 108,
+      "sha256": "6979eb06ecde72952f6abace7591591c76f646a3f9cd221358ec76134fc55d30"
+    },
     {
       "path": ".gitignore",
       "size": 249,
