@@ -3,9 +3,7 @@
 Standalone web app at **vcs.sigmashake.com** that lets viewers customize
 their on-stream character in the Vibe Coder Sim OBS overlay.
 
-Collaborators adding features should start with [SPEC_SHEET.md](SPEC_SHEET.md)
-and [AGENTS.md](AGENTS.md). The public full-stream harness is in
-[`integrations/`](integrations/).
+Collaborators adding features should start with [SPEC_SHEET.md](SPEC_SHEET.md).
 
 > History: This project shipped as a Twitch Extension panel first, but
 > Twitch's Extension service was broken so we pivoted to a regular

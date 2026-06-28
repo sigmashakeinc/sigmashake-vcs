@@ -6,7 +6,6 @@
       "**",
       "!dist",
       "!dist-local",
-      "!graphify-out",
       "!public",
       "!node_modules",
       "!.wrangler",
