@@ -1,8 +1,8 @@
 {
   "schema": "sigmashake-vcs-public-mirror-manifest-v1",
-  "source_commit": "f25c07cfdb9842741069e24842e567b2633a7d7a",
+  "source_commit": "5ebbad51cdd77debf204f625978404d777d0fcff",
   "source_rel": "sigmashake-vcs",
-  "generated_at": "2026-06-28T23:38:14.469661+00:00",
+  "generated_at": "2026-06-28T23:49:38.785927+00:00",
   "transform_version": "public-mirror-v1",
   "scanner_versions": {
     "gitleaks": "8.30.1",
