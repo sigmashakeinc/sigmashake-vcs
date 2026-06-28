@@ -1,12 +1,12 @@
 {
   "schema": "sigmashake-vcs-public-mirror-manifest-v1",
-  "source_commit": "5ffbdd16f4685805d20cc6733c7cbf52e6b26d02",
+  "source_commit": "11008c932dcd3674d1e25290bec6af9d11979cd5",
   "source_rel": "sigmashake-vcs",
-  "generated_at": "2026-06-28T22:42:10.719371+00:00",
+  "generated_at": "2026-06-28T23:24:10.440217+00:00",
   "transform_version": "public-mirror-v1",
   "scanner_versions": {
     "gitleaks": "8.30.1",
-    "trufflehog": "unavailable"
+    "trufflehog": "trufflehog 3.95.6"
   },
   "lpc_rows": 1096,
   "files": [
@@ -36,6 +36,11 @@
       "sha256": "e187e050bf7be468bef20649f18882f7bfa3dc41bdaa3c1781914b0c368e9104"
     },
     {
+      "path": "SSG.md",
+      "size": 936,
+      "sha256": "cfa4f523832a50a571de3ed34852ef149f203d68b4520a554e3ab00259a210d2"
+    },
+    {
       "path": "UNLICENSE",
       "size": 1211,
       "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e"
@@ -47,8 +52,8 @@
     },
     {
       "path": "bun.lock",
-      "size": 22785,
-      "sha256": "c52bacb64fac2714eba4160791cf82886090c9cb3d0186ff90a7919a21f3631f"
+      "size": 25013,
+      "sha256": "16f93515bf88c79883c5a094f6e542aad9aed8ef5026e17f5318e6372a3af610"
     },
     {
       "path": "openapi.yaml",
@@ -57,8 +62,8 @@
     },
     {
       "path": "package.json",
-      "size": 1455,
-      "sha256": "2fdf973e8a064a27ce5f39a4d3080598e266b1371c84007d843748107478be85"
+      "size": 1487,
+      "sha256": "5f70b85417a858e02d4b370aced5ca570a112554d449696623622b014921f5be"
     },
     {
       "path": "tsconfig.json",
@@ -5857,8 +5862,13 @@
     },
     {
       "path": "scripts/public-integrity.mjs",
-      "size": 9050,
-      "sha256": "e3ec05881ee1db1bba75145d99a4a929093eba0600a77df1212caaca2b74794d"
+      "size": 11851,
+      "sha256": "eba63a78b6342a0eb45278dd0ba47db124a4187a330dfffc91c2a61e217506cc"
+    },
+    {
+      "path": "scripts/ssg-public-check.mjs",
+      "size": 5774,
+      "sha256": "40bc1e1b41ae8075121a1330129622b7ef6cdb2e71b3b0eb4884810d653b6a76"
     },
     {
       "path": "tools/vcs-cli.ts",
@@ -5874,6 +5884,11 @@
       "path": ".github/CODEOWNERS",
       "size": 8,
       "sha256": "e8947d74cdc5988bd1dd0bfe7fce2731ea0e32e87815ca21fae6f84c7befa267"
+    },
+    {
+      "path": ".github/workflows/ssg-practices.yml",
+      "size": 1406,
+      "sha256": "b79fa3d0862bf2f2037b92494e390f49f80a84953ef6c7b5d1fe75b337d57f08"
     }
   ]
 }
