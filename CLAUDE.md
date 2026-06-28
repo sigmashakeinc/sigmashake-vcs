@@ -13,40 +13,11 @@ in the project.
 > via `sigmashake-accounts`. The DO+bridge+chat-elixir surface stayed
 > the same; only the auth/UI shell changed.
 
-## Public Collaboration
-
-Public collaborators should start with `SPEC_SHEET.md` and `AGENTS.md`.
-Those two files define the stable collaboration contract; this file keeps the
-agent/operator details close to the code.
-
-For full OBS-stream work, do not publish private OBS, chat-elixir, account, or
-MMO source. Publish contract-shaped mocks and docs instead. The public harness
-lives in `integrations/`:
-
-```sh
-bun run integration:mock-chat
-bun run integration:mock-mmo
-VCS_BASE_URL=http://127.0.0.1:8787 VCS_HMAC_KEY=dev-vcs-secret bun run integration:bridge
-bun run dev
-```
-
-Any route or bridge change must keep these public surfaces in sync:
-
-- Worker route and `VcsRoom` RPC allowlist.
-- Static UI behavior.
-- `integrations/mock-chat` or `integrations/mock-mmo`.
-- `integrations/contracts/README.md`.
-- `SPEC_SHEET.md`, `AGENTS.md`, and this guide when contributor setup changes.
-- `scripts/publish-vcs-mirror.sh` allowlist when new public files should ship.
-
 ## Commands
 
 ```sh
 bun install
 bun run dev          # wrangler dev — local Worker + static assets
-bun run integration:mock-chat
-bun run integration:mock-mmo
-bun run integration:bridge
 bun run typecheck    # tsc --noEmit
 bun run deploy       # bash ../shared/agent-config/scripts/deploy-guarded.sh
 bun run clean        # node-based rm-rf (hook-safe equivalent)
@@ -152,12 +123,6 @@ static/
   index.html           Landing + builder UI (single page; sign-in inline)
   panel.js             Vanilla-DOM client; state machine + DOM ops
   panel.css            CSS — Twitch-style dark theme
-integrations/
-  bridge/              Public standalone bridge runner for local Worker dev
-  mock-chat/           chat-elixir-compatible cosmetic endpoint mock
-  mock-mmo/            MMO combat endpoint mock
-  mock-auth/           local session fixture docs
-  contracts/           bridge/route contract docs
 wrangler.toml          DO + KV + secrets + routes
 package.json           Hono only; tsc + wrangler dev-deps
 tsconfig.json          ES2022 strict, no emit

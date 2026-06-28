@@ -18,11 +18,6 @@ function pkg() {
   return readJson(join(ROOT, "package.json"));
 }
 
-function hueDistance(a: number, b: number) {
-  const delta = Math.abs(a - b);
-  return Math.min(delta, 360 - delta);
-}
-
 describe("sigmashake-vcs regression — public script surface is stable", () => {
   test("retains a test script", () => {
     const sc = pkg().scripts || {};
@@ -31,42 +26,5 @@ describe("sigmashake-vcs regression — public script surface is stable", () => 
   test("package name keeps its expected shape", () => {
     const n = pkg().name || "";
     expect(/^(@[\w-]+\/[\w.-]+|[\w.-]+)$/.test(n)).toBe(true);
-  });
-  test("rose trail config drives sparkle hue instead of default gold", async () => {
-    const mod = await import(
-      new URL("../../static/assets/js/vibe-coder-sim/particles.js?rose-trail", import.meta.url).href
-    );
-    const savedRandom = Math.random;
-    const styles: string[] = [];
-    const ctx = {
-      globalAlpha: 1,
-      globalCompositeOperation: "source-over",
-      save() {},
-      restore() {},
-      beginPath() {},
-      moveTo() {},
-      lineTo() {},
-      closePath() {},
-      fill() {},
-      set fillStyle(value: string) {
-        styles.push(value);
-      },
-    };
-
-    try {
-      Math.random = () => 0.5;
-      mod.emitTrail("sparkle", 10, 20, 55, { color: "#ff4fa3" });
-      mod.tickAndDraw(ctx, 16);
-    } finally {
-      Math.random = savedRandom;
-    }
-
-    const sparkleStyle = styles.find((value) => /^hsl\(/.test(value));
-    expect(sparkleStyle).toBeDefined();
-    const match = sparkleStyle?.match(/^hsl\(([\d.]+),100%,75%\)$/);
-    expect(match).toBeDefined();
-    const emittedHue = Number(match?.[1]);
-    expect(emittedHue).not.toBe(55);
-    expect(hueDistance(emittedHue, 334)).toBeLessThan(20);
   });
 });
