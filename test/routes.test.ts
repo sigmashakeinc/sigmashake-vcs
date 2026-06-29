@@ -26,6 +26,14 @@ mock.module("cloudflare:workers", () => ({
 // statically hoisted, so a normal `import` of '../src/index' would resolve
 // `cloudflare:workers` before the mock registers).
 const { default: app } = await import("../src/index");
+const bridgeModulePath = "../integrations/bridge/vcs-bridge.js";
+const { getBridgeConfig, routeRpc } = (await import(bridgeModulePath)) as {
+  getBridgeConfig: (env?: Record<string, string | undefined>) => Record<string, unknown>;
+  routeRpc: (
+    rpc: { method: "GET" | "POST"; path: string; body?: Record<string, unknown> },
+    options?: Record<string, unknown>,
+  ) => Promise<{ status: number; body: string }>;
+};
 
 // ── Test helpers ──────────────────────────────────────────────────────────────
 
@@ -115,6 +123,25 @@ function bindings(opts: Partial<VcsBindings> = {}): VcsBindings {
     },
     TWITCH_BROADCASTER_ID: "test-broadcaster",
     ...opts,
+  };
+}
+
+function bridgeConfig(overrides: Record<string, unknown> = {}) {
+  return {
+    ...getBridgeConfig({}),
+    chatElixirBase: "http://chat.local",
+    mmoBaseUrl: "http://mmo.local",
+    vcsBaseUrl: "http://vcs.local",
+    vcsHmacKey: "bridge-key",
+    fetchTimeoutMs: 50,
+    reconnectDelayMs: 10,
+    brainsEnabled: false,
+    brainsRateLimitMs: 5_000,
+    brainsTimeoutMs: 50,
+    cerebrasApiKey: "",
+    cerebrasBaseUrl: "https://api.cerebras.ai",
+    cerebrasModel: "gemma-4-31b",
+    ...overrides,
   };
 }
 
@@ -348,6 +375,175 @@ describe("GET /api/v1/vcs/me", () => {
         twitch_display: "bobstream",
       },
     });
+  });
+});
+
+describe("POST /api/v1/vcs/brains/tick", () => {
+  test("returns 401 without a session cookie", async () => {
+    const res = await app.request(
+      "/api/v1/vcs/brains/tick",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scene: "studio" }),
+      },
+      bindings(),
+    );
+    expect(res.status).toBe(401);
+    expect(fakeRoom.lastDispatch).toBeNull();
+  });
+
+  test("dispatches canonical identity only and clamps optional body fields", async () => {
+    fakeKv.seed("sess-1", TWITCH_SESSION);
+
+    const oversizedScene = `  ${"s".repeat(140)}  `;
+    const oversizedStimulus = ` ${"t".repeat(600)} `;
+    const oversizedMood = `${"m".repeat(80)} `;
+    const oversizedNearby = `${"n".repeat(90)} `;
+    const oversizedImage = ` data:image/png;base64,${"a".repeat(17_000)} `;
+
+    const res = await app.request(
+      "/api/v1/vcs/brains/tick",
+      {
+        method: "POST",
+        headers: {
+          Cookie: "session_id=sess-1",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          source: "kick",
+          login: "mallory",
+          user_id: "bad",
+          display: "mallory",
+          twitch_user_id: "bad",
+          twitch_login: "mallory",
+          twitch_display: "mallory",
+          scene: oversizedScene,
+          stimulus: oversizedStimulus,
+          mood: oversizedMood,
+          nearby: ["  ally  ", "", oversizedNearby, 42, "friend", "mob", "loot", "door", "extra"],
+          image_data_url: oversizedImage,
+          unknown_field: "blocked",
+        }),
+      },
+      bindings(),
+    );
+
+    expect(res.status).toBe(200);
+    expect(fakeRoom.lastDispatch).toEqual({
+      method: "POST",
+      path: "/api/v1/vcs/brains/tick",
+      body: {
+        source: "twitch",
+        login: "alice",
+        user_id: "99887766",
+        display: "alice",
+        twitch_user_id: "99887766",
+        twitch_login: "alice",
+        twitch_display: "alice",
+        scene: "s".repeat(96),
+        stimulus: "t".repeat(512),
+        mood: "m".repeat(64),
+        nearby: ["ally", "n".repeat(64), "friend", "mob", "loot", "door"],
+        image_data_url: `data:image/png;base64,${"a".repeat(16_362)}`,
+      },
+    });
+  });
+});
+
+describe("bridge brains harness", () => {
+  const brainsRpc = {
+    method: "POST" as const,
+    path: "/api/v1/vcs/brains/tick",
+    body: {
+      source: "twitch",
+      login: "alice",
+      user_id: "123",
+      display: "alice",
+      scene: "studio",
+      stimulus: "chat asked about the latest build",
+    },
+  };
+
+  test("returns unavailable without falling through to chat when brains are disabled", async () => {
+    let fetchCalls = 0;
+    const reply = await routeRpc(brainsRpc, {
+      config: bridgeConfig(),
+      fetchImpl: async () => {
+        fetchCalls += 1;
+        throw new Error("brains-disabled path should not fetch");
+      },
+      rateLimitStore: new Map<string, number>(),
+    });
+
+    expect(reply.status).toBe(200);
+    expect(JSON.parse(reply.body)).toEqual({
+      ok: true,
+      unavailable: true,
+      reason: "brains_disabled",
+    });
+    expect(fetchCalls).toBe(0);
+  });
+
+  test("returns unavailable without falling through to chat when the Cerebras key is missing", async () => {
+    let fetchCalls = 0;
+    const reply = await routeRpc(brainsRpc, {
+      config: bridgeConfig({ brainsEnabled: true }),
+      fetchImpl: async () => {
+        fetchCalls += 1;
+        throw new Error("missing-key path should not fetch");
+      },
+      rateLimitStore: new Map<string, number>(),
+    });
+
+    expect(reply.status).toBe(200);
+    expect(JSON.parse(reply.body)).toEqual({
+      ok: true,
+      unavailable: true,
+      reason: "brains_unconfigured",
+    });
+    expect(fetchCalls).toBe(0);
+  });
+
+  test("uses the Cerebras branch and rate-limits repeated viewer ticks", async () => {
+    const fetchCalls: Array<{ url: string; init?: RequestInit }> = [];
+    const fetchImpl = async (url: string | URL | Request, init?: RequestInit) => {
+      fetchCalls.push({ url: String(url), init });
+      return new Response(
+        JSON.stringify({
+          choices: [{ message: { content: '{"ok":true,"thought":"watching chat"}' } }],
+        }),
+        {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        },
+      );
+    };
+    const rateLimitStore = new Map<string, number>();
+    const config = bridgeConfig({ brainsEnabled: true, cerebrasApiKey: "secret-key" });
+
+    const first = await routeRpc(brainsRpc, {
+      config,
+      fetchImpl,
+      rateLimitStore,
+      now: () => 10_000,
+    });
+    const second = await routeRpc(brainsRpc, {
+      config,
+      fetchImpl,
+      rateLimitStore,
+      now: () => 10_100,
+    });
+
+    expect(first.status).toBe(200);
+    expect(JSON.parse(first.body)).toEqual({ ok: true, thought: "watching chat" });
+    expect(fetchCalls).toHaveLength(1);
+    expect(fetchCalls[0]?.url).toBe("https://api.cerebras.ai/v1/chat/completions");
+    expect((fetchCalls[0]?.init?.headers as Record<string, string>).authorization).toBe(
+      "Bearer secret-key",
+    );
+    expect(second.status).toBe(429);
+    expect(JSON.parse(second.body)).toEqual({ ok: false, error: "brain_rate_limited" });
   });
 });
 

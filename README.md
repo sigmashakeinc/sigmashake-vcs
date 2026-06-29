@@ -79,7 +79,10 @@ DB writes happen in chat-elixir on the streamer machine. Run
 ```sh
 # In ~/.config/sigmashake-obs/env (or wherever obs:chat:start picks up env):
 VCS_BRIDGE_ENABLED=1
-VCS_HMAC_KEY=<same hex blob the worker secret holds>
+# Set VCS_HMAC_KEY to the same private bridge secret configured on the Worker.
+VCS_BRAINS_ENABLED=1
+CEREBRAS_API_KEY=<required for /api/v1/vcs/brains/tick>
+VCS_BRAIN_LOCAL_TOKEN=<shared only between chat-elixir and the OBS overlay server>
 ```
 
 Then `bun run obs:chat:start` — the bridge starts as part of
@@ -119,6 +122,7 @@ can call them. The worker passes verified `twitch_user_id`,
 | Method | Path                              | Purpose                              |
 |--------|-----------------------------------|--------------------------------------|
 | GET    | `/api/v1/vcs/me`                  | Loadout + inventory + XP + shop view |
+| POST   | `/api/v1/vcs/brains/tick`         | Session-derived viewer brain tick    |
 | GET    | `/api/v1/vcs/catalog`             | Full catalog grouped by slot         |
 | POST   | `/api/v1/vcs/equip`               | Equip an owned item                  |
 | POST   | `/api/v1/vcs/unequip`             | Clear a slot                         |
@@ -132,6 +136,20 @@ can call them. The worker passes verified `twitch_user_id`,
 
 See `lib/chat_web/controllers/vcs_extension_controller.ex` for the
 canonical schema.
+
+`POST /api/v1/vcs/brains/tick` stays on the cookie-authenticated viewer
+surface. The worker resolves the viewer session first, ignores any identity
+fields supplied in the request body, and forwards only the canonical viewer
+envelope plus optional clamped `scene`, `stimulus`, `mood`, `nearby`, and
+`image_data_url`. It is intentionally not added to the public bearer-key
+OpenAPI surface.
+
+The OBS browser-source autonomy loop uses a separate loopback endpoint,
+`POST http://127.0.0.1:8080/api/vcs/brains/tick`. Chat-elixir signs each
+visible Garden pet as `brain_token = HMAC_SHA256(VCS_BRAIN_LOCAL_TOKEN,
+"<source>:<login>")`; the OBS overlay server verifies that token before it
+spends a Cerebras request. This keeps direct browser-source ticks from
+spoofing arbitrary VCS identities.
 
 ## Body type
 
