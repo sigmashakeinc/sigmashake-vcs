@@ -1,8 +1,8 @@
 {
   "schema": "sigmashake-vcs-public-mirror-manifest-v1",
-  "source_commit": "d9df0bbc938c8eee2a834f44f5b8bd69a0ed6cb0",
+  "source_commit": "fe5af7fcb38c7746d24aaecaa5c1befc9c551ac6",
   "source_rel": "sigmashake-vcs",
-  "generated_at": "2026-06-29T01:48:33.396409+00:00",
+  "generated_at": "2026-06-29T02:41:57.206795+00:00",
   "transform_version": "public-mirror-v1",
   "scanner_versions": {
     "gitleaks": "version is set by build process",
@@ -157,8 +157,8 @@
     },
     {
       "path": "static/index.html",
-      "size": 22829,
-      "sha256": "3ed535591ae86af33d47db5563f3e957f0b10b82c61932d14c6eaf448b46c70f"
+      "size": 22869,
+      "sha256": "f9b7155a22c5996d4a7a1e57513798df4431610dca28f04660b3cede94517bfc"
     },
     {
       "path": "static/panel.css",
@@ -167,8 +167,8 @@
     },
     {
       "path": "static/panel.js",
-      "size": 84562,
-      "sha256": "c9161126a968773f6144d9adc217aaf3442ced0b4588cdaa7dce3239d9694155"
+      "size": 84557,
+      "sha256": "2336183ad2540bebf81b4410416d959d1b3b2d4c68b125e1843aa07a4ea4e085"
     },
     {
       "path": "static/assets/lpc/CREDITS-LPC.md",
@@ -5852,8 +5852,8 @@
     },
     {
       "path": "test/regression/vcs-abyss-tab.test.ts",
-      "size": 1226,
-      "sha256": "ae447adc036708db1d577e0d303c6e0517d09bd6b8c0656f1dbea8f7a535969e"
+      "size": 1295,
+      "sha256": "25d51269a3b7c96321876de0adb5e37824f4307d870d2a402ffd930470e5e999"
     },
     {
       "path": "test/load/sigmashake-vcs.load.test.ts",

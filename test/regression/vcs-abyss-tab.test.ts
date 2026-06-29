@@ -14,8 +14,9 @@ describe("VCS SIGMA ABYSS tab", () => {
     expect(indexHtml).toContain("SIGMA ABYSS auto battle");
   });
 
-  test("lazy-loads the public SIGMA ABYSS edge realm", () => {
-    expect(indexHtml).toContain('data-src="https://mmo.sigmashake.com/?embed=vcs"');
+  test("lazy-loads the streamer-local SIGMA ABYSS autobattler", () => {
+    expect(indexHtml).toContain('data-src="http://127.0.0.1:7777/?embed=vcs"');
+    expect(indexHtml).toContain('allow="local-network-access"');
     expect(panelJs).toContain('if (name === "abyss") loadAbyssTab();');
     expect(panelJs).toContain("function loadAbyssTab()");
   });
