@@ -202,7 +202,7 @@ function loadAbyssTab() {
   if (!frame || frame.getAttribute("src")) return;
   show("abyss-loading");
   frame.addEventListener("load", () => hide("abyss-loading"), { once: true });
-  frame.setAttribute("src", frame.dataset.src || "https://mmo.sigmashake.com/");
+  frame.setAttribute("src", frame.dataset.src || "http://127.0.0.1:7777/");
 }
 
 function wireSubTabs() {

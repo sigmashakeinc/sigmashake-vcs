@@ -322,14 +322,15 @@
           </div><!-- /#build-content -->
         </div><!-- /build tab-panel -->
 
-        <!-- ABYSS: edge-hosted SIGMA ABYSS auto-battle realm -->
+        <!-- ABYSS: streamer-local SIGMA ABYSS auto-battle canvas -->
         <div class="tab-panel" data-tab="abyss" role="tabpanel" hidden>
           <div id="abyss-loading" class="muted abyss-status-row">Loading SIGMA ABYSS...</div>
           <iframe
             id="abyss-frame"
             class="abyss-frame"
             title="SIGMA ABYSS auto battle"
-            data-src="https://mmo.sigmashake.com/?embed=vcs"
+            data-src="http://127.0.0.1:7777/?embed=vcs"
+            allow="local-network-access"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
           ></iframe>
