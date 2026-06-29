@@ -1,8 +1,8 @@
 {
   "schema": "sigmashake-vcs-public-mirror-manifest-v1",
-  "source_commit": "fe5af7fcb38c7746d24aaecaa5c1befc9c551ac6",
+  "source_commit": "138654272afc8b35ddee86af474810e5f0fc4a7f",
   "source_rel": "sigmashake-vcs",
-  "generated_at": "2026-06-29T02:41:57.206795+00:00",
+  "generated_at": "2026-06-29T07:42:08.440238+00:00",
   "transform_version": "public-mirror-v1",
   "scanner_versions": {
     "gitleaks": "version is set by build process",
@@ -157,8 +157,8 @@
     },
     {
       "path": "static/index.html",
-      "size": 22869,
-      "sha256": "f9b7155a22c5996d4a7a1e57513798df4431610dca28f04660b3cede94517bfc"
+      "size": 22888,
+      "sha256": "01da9a774c367e9d5a663bfaae3e86270ccf50a7a053bde7c043a9983e20b7f8"
     },
     {
       "path": "static/panel.css",
@@ -167,8 +167,8 @@
     },
     {
       "path": "static/panel.js",
-      "size": 84557,
-      "sha256": "2336183ad2540bebf81b4410416d959d1b3b2d4c68b125e1843aa07a4ea4e085"
+      "size": 84580,
+      "sha256": "3fc023831c0cfe0ed6d6259c5848da962abda8204dd09630799c5a2d2bef9158"
     },
     {
       "path": "static/assets/lpc/CREDITS-LPC.md",
@@ -5792,8 +5792,8 @@
     },
     {
       "path": "test/routes.test.ts",
-      "size": 58231,
-      "sha256": "c5c1bbf6d58ae1a16a1b388a0f3e4865de7a2814c22a94377f71f6b78e22666c"
+      "size": 58814,
+      "sha256": "c616c0bd5bc78b1a74d6aa170078995e13ce88ea2c314320d9305cc3b2ac335d"
     },
     {
       "path": "test/session.test.ts",
@@ -5852,8 +5852,8 @@
     },
     {
       "path": "test/regression/vcs-abyss-tab.test.ts",
-      "size": 1295,
-      "sha256": "25d51269a3b7c96321876de0adb5e37824f4307d870d2a402ffd930470e5e999"
+      "size": 1542,
+      "sha256": "01399e5c487b0a3b485f1e37cf51d84ee30fa3ca32dfb36e75a65893b35ba0d5"
     },
     {
       "path": "test/load/sigmashake-vcs.load.test.ts",
@@ -5917,8 +5917,8 @@
     },
     {
       "path": "integrations/bridge/vcs-bridge.js",
-      "size": 13399,
-      "sha256": "918f16c765afda8c552ff56f9de8fa0c235faa5a28bf581e8df09d23eadfca8e"
+      "size": 14118,
+      "sha256": "d666877738812a89d68485a4f668af88ad57f6db92bcd4fa52df32388c888f4e"
     },
     {
       "path": "tools/vcs-cli.ts",

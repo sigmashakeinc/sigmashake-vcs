@@ -322,15 +322,15 @@
           </div><!-- /#build-content -->
         </div><!-- /build tab-panel -->
 
-        <!-- ABYSS: streamer-local SIGMA ABYSS auto-battle canvas -->
+        <!-- ABYSS: streamer-local SIGMA ABYSS render-only auto-battle overlay -->
         <div class="tab-panel" data-tab="abyss" role="tabpanel" hidden>
           <div id="abyss-loading" class="muted abyss-status-row">Loading SIGMA ABYSS...</div>
           <iframe
             id="abyss-frame"
             class="abyss-frame"
             title="SIGMA ABYSS auto battle"
-            data-src="http://127.0.0.1:7777/?embed=vcs"
-            allow="local-network-access"
+            data-src="http://127.0.0.1:7777/overlay/arena?embed=vcs"
+            allow="local-network"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
           ></iframe>

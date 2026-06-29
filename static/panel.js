@@ -202,7 +202,7 @@ function loadAbyssTab() {
   if (!frame || frame.getAttribute("src")) return;
   show("abyss-loading");
   frame.addEventListener("load", () => hide("abyss-loading"), { once: true });
-  frame.setAttribute("src", frame.dataset.src || "http://127.0.0.1:7777/");
+  frame.setAttribute("src", frame.dataset.src || "http://127.0.0.1:7777/overlay/arena?embed=vcs");
 }
 
 function wireSubTabs() {

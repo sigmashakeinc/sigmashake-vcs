@@ -14,11 +14,14 @@ describe("VCS SIGMA ABYSS tab", () => {
     expect(indexHtml).toContain("SIGMA ABYSS auto battle");
   });
 
-  test("lazy-loads the streamer-local SIGMA ABYSS autobattler", () => {
-    expect(indexHtml).toContain('data-src="http://127.0.0.1:7777/?embed=vcs"');
-    expect(indexHtml).toContain('allow="local-network-access"');
+  test("lazy-loads the streamer-local render-only SIGMA ABYSS autobattler", () => {
+    expect(indexHtml).toContain('data-src="http://127.0.0.1:7777/overlay/arena?embed=vcs"');
+    expect(indexHtml).toContain('allow="local-network"');
     expect(panelJs).toContain('if (name === "abyss") loadAbyssTab();');
     expect(panelJs).toContain("function loadAbyssTab()");
+    expect(panelJs).toContain('"http://127.0.0.1:7777/overlay/arena?embed=vcs"');
+    expect(indexHtml).not.toContain('data-src="http://127.0.0.1:7777/?embed=vcs"');
+    expect(panelJs).not.toContain('"http://127.0.0.1:7777/"');
   });
 
   test("keeps the embedded realm inside the fixed-height VCS panel", () => {
