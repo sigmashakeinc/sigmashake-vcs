@@ -6,6 +6,9 @@
   },
   "scripts": {
     "dev": "wrangler dev",
+    "integration:mock-chat": "bun integrations/mock-chat/server.js",
+    "integration:mock-mmo": "bun integrations/mock-mmo/server.js",
+    "integration:bridge": "bun integrations/bridge/vcs-bridge.js",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "test": "bun test",
@@ -34,7 +37,6 @@
     "hono": "^4.7.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.15",
     "@cloudflare/workers-types": "^4.20250620.0",
     "bun-types": "^1.3.13",
     "typescript": "^5.8.3",

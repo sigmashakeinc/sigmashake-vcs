@@ -130,6 +130,7 @@ const state = {
   abyss: null, // {snapshot, world, fallback}
   abyssLoaded: false,
   abyssRefreshBound: false,
+  abyssMapCentered: false,
 };
 
 // Synthetic pet objects used to drive composeAvatar for each canvas.
@@ -206,12 +207,30 @@ function loadAbyssTab() {
   if (!view) return;
   if (!state.abyssRefreshBound) {
     $("abyss-refresh")?.addEventListener("click", () => refreshAbyss({ force: true }));
+    wireAbyssMapControls();
+    window.addEventListener("resize", () => {
+      if (state.abyss) renderAbyssCanvas(state.abyss);
+    }, { passive: true });
     state.abyssRefreshBound = true;
   }
   if (state.abyssLoaded || view.dataset.loaded === "true") return;
   state.abyssLoaded = true;
   view.dataset.loaded = "true";
   refreshAbyss({ force: false });
+}
+
+function wireAbyssMapControls() {
+  document.querySelectorAll("[data-abyss-pan]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const scroll = $("abyss-map-scroll");
+      if (!scroll) return;
+      const dir = btn.dataset.abyssPan;
+      const step = 130;
+      const left = dir === "left" ? -step : dir === "right" ? step : 0;
+      const top = dir === "up" ? -step : dir === "down" ? step : 0;
+      scroll.scrollBy({ left, top, behavior: "smooth" });
+    });
+  });
 }
 
 async function refreshAbyss({ force } = { force: false }) {
@@ -283,9 +302,27 @@ function buildAbyssFallback() {
 
 function renderAbyss() {
   const data = state.abyss || buildAbyssFallback();
+  renderAbyssList("abyss-battles", normalizeAbyssBattles(data));
   renderAbyssList("abyss-leaderboard", normalizeAbyssLeaders(data.snapshot?.leaderboard));
   renderAbyssList("abyss-feed", normalizeAbyssFeed(data.snapshot?.feed));
   renderAbyssCanvas(data);
+}
+
+function normalizeAbyssBattles(data) {
+  const leaders = Array.isArray(data.snapshot?.leaderboard) ? data.snapshot.leaderboard : [];
+  const monsters = Object.values(data.world?.monsters || {});
+  if (leaders.length === 0) return [{ main: "No auto battles yet", meta: "Agents will appear here as the realm fills." }];
+  return leaders.slice(0, 6).map((agent, i) => {
+    const monster = monsters[i % Math.max(1, monsters.length)] || { name: "Abyss Echo", level: 1 };
+    const level = Number(agent?.level || 1);
+    const kills = Number(agent?.kills || 0);
+    const gold = Number(agent?.gold || 0);
+    const hp = Math.max(18, 92 - ((kills * 13 + gold + i * 11) % 67));
+    return {
+      main: `${agent?.name || "agent"} vs ${monster.name || "Abyss Echo"}`,
+      meta: `Lv ${level} auto attacking · enemy hp ${hp}% · threat ${Number(monster.level || 1)}`,
+    };
+  });
 }
 
 function normalizeAbyssLeaders(leaders) {
@@ -334,17 +371,17 @@ function renderAbyssCanvas(data) {
   const tiles = Array.isArray(world.tiles) ? world.tiles : [];
   const tileByCoord = new Map(tiles.map((tile) => [`${tile.x},${tile.y}`, tile.content]));
   const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
-  const cssWidth = canvas.clientWidth || 720;
-  const cssHeight = canvas.clientHeight || 360;
+  const cssWidth = canvas.clientWidth || 920;
+  const cssHeight = canvas.clientHeight || 520;
   if (canvas.width !== cssWidth * dpr || canvas.height !== cssHeight * dpr) {
     canvas.width = cssWidth * dpr;
     canvas.height = cssHeight * dpr;
   }
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, cssWidth, cssHeight);
-  const cell = Math.max(16, Math.floor(Math.min((cssWidth - 220) / width, (cssHeight - 28) / height)));
-  const originX = 14;
-  const originY = 14;
+  const cell = Math.max(34, Math.floor(Math.min((cssWidth - 260) / width, (cssHeight - 40) / height)));
+  const originX = 18;
+  const originY = 18;
 
   ctx.fillStyle = "#0b1118";
   ctx.fillRect(0, 0, cssWidth, cssHeight);
@@ -374,6 +411,15 @@ function renderAbyssCanvas(data) {
   const leaders = Array.isArray(data.snapshot?.leaderboard) ? data.snapshot.leaderboard.slice(0, 4) : [];
   leaders.forEach((agent, i) => drawAbyssAgent(ctx, agent, i, originX, originY, cell, width, height));
   drawAbyssHud(ctx, data, cssWidth, cssHeight);
+  centerAbyssMap();
+}
+
+function centerAbyssMap() {
+  const scroll = $("abyss-map-scroll");
+  if (!scroll || state.abyssMapCentered) return;
+  state.abyssMapCentered = true;
+  scroll.scrollLeft = Math.max(0, (scroll.scrollWidth - scroll.clientWidth) / 2);
+  scroll.scrollTop = Math.max(0, (scroll.scrollHeight - scroll.clientHeight) / 2);
 }
 
 function abyssTileColor(type) {

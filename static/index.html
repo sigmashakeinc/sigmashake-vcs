@@ -333,8 +333,25 @@
               <button id="abyss-refresh" class="icon-btn" type="button" title="Refresh Abyss" aria-label="Refresh Abyss">↻</button>
             </div>
             <div class="abyss-stage">
-              <canvas id="abyss-canvas" width="720" height="360" aria-label="SIGMA ABYSS auto battle spectator"></canvas>
+              <div class="abyss-map-card">
+                <div class="abyss-map-top">
+                  <h3 class="section-mini">Auto Battle Map</h3>
+                  <div class="abyss-pan-controls" aria-label="Map pan controls">
+                    <button type="button" data-abyss-pan="up" title="Pan map up" aria-label="Pan map up">↑</button>
+                    <button type="button" data-abyss-pan="left" title="Pan map left" aria-label="Pan map left">←</button>
+                    <button type="button" data-abyss-pan="down" title="Pan map down" aria-label="Pan map down">↓</button>
+                    <button type="button" data-abyss-pan="right" title="Pan map right" aria-label="Pan map right">→</button>
+                  </div>
+                </div>
+                <div id="abyss-map-scroll" class="abyss-map-scroll" tabindex="0" aria-label="Scrollable SIGMA ABYSS auto battle map">
+                  <canvas id="abyss-canvas" width="920" height="520" aria-label="SIGMA ABYSS auto battle spectator"></canvas>
+                </div>
+              </div>
               <div class="abyss-side">
+                <div>
+                  <h3 class="section-mini">Auto Battles</h3>
+                  <div id="abyss-battles" class="abyss-list"></div>
+                </div>
                 <div>
                   <h3 class="section-mini">Leaderboard</h3>
                   <div id="abyss-leaderboard" class="abyss-list"></div>
