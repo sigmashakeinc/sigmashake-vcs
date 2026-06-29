@@ -1,12 +1,12 @@
 {
   "schema": "sigmashake-vcs-public-mirror-manifest-v1",
-  "source_commit": "5ebbad51cdd77debf204f625978404d777d0fcff",
+  "source_commit": "d0b854e8c5d240288e2edf3a93db77d23e362968",
   "source_rel": "sigmashake-vcs",
-  "generated_at": "2026-06-28T23:49:38.785927+00:00",
+  "generated_at": "2026-06-29T01:09:34.480119+00:00",
   "transform_version": "public-mirror-v1",
   "scanner_versions": {
-    "gitleaks": "8.30.1",
-    "trufflehog": "trufflehog 3.95.6"
+    "gitleaks": "version is set by build process",
+    "trufflehog": "unavailable"
   },
   "lpc_rows": 1096,
   "files": [
@@ -21,6 +21,11 @@
       "sha256": "62a353935924a29d0dfc0c9673df2181c6719c8f72de7d75058904053478d9c4"
     },
     {
+      "path": "AGENTS.md",
+      "size": 3043,
+      "sha256": "767652d4d37a5b8b64c156ccf487ac77e4cdc5ea24c85d8fcc4cb9d1cdc32ebd"
+    },
+    {
       "path": "CLAUDE.md",
       "size": 9839,
       "sha256": "96b3fca7e87c63a97f512cb2ba7b738cb467ec696c38b85e0f931f44abb17ae9"
@@ -32,8 +37,8 @@
     },
     {
       "path": "README.md",
-      "size": 8359,
-      "sha256": "8c8204e134eb85a8307343817f4354aa3d09014913c987a9d90a3e1be52e204a"
+      "size": 8594,
+      "sha256": "bc625f444773ac3cd4650aaad50a8219671db2dc2aa561b03fb1392021826187"
     },
     {
       "path": "RUNBOOK.md",
@@ -5741,6 +5746,31 @@
       "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e"
     },
     {
+      "path": ".claude/skills/vcs/SKILL.md",
+      "size": 8411,
+      "sha256": "37ad7298d18ff777a5760d797648dae46a754bc262a7cc288f9e81a00da427d7"
+    },
+    {
+      "path": ".claude/agents/vcs-public-collaboration-reviewer.md",
+      "size": 1475,
+      "sha256": "8a680c0d25ea29fbe3a771f50db7c5aacffc66f90f88ec233da0e1f19f208498"
+    },
+    {
+      "path": ".claude/agents/vcs-stream-integration-implementer.md",
+      "size": 1532,
+      "sha256": "27beecfa7fbe9c31351526f9f23f32bb9c8b9918739ddf0d542d495192146a05"
+    },
+    {
+      "path": ".claude/agents/vcs-ui-implementer.md",
+      "size": 1524,
+      "sha256": "770a573d135792133f812fe14ccd05d1c5ae7f868c057ee5799ca735a321975c"
+    },
+    {
+      "path": ".claude/agents/vcs-worker-api-implementer.md",
+      "size": 1603,
+      "sha256": "563249570f43e97401bbd0d6055ca6a81611aeb682a305bb6225716a991b0865"
+    },
+    {
       "path": "test/auth.test.ts",
       "size": 9490,
       "sha256": "4c9c92aa0c271b1ad7dea4e272c3a70991c2991771220f7686225b11f5f7fc27"
@@ -5867,13 +5897,13 @@
     },
     {
       "path": "scripts/public-integrity.mjs",
-      "size": 11851,
-      "sha256": "eba63a78b6342a0eb45278dd0ba47db124a4187a330dfffc91c2a61e217506cc"
+      "size": 12275,
+      "sha256": "329621441aff57b87b1cb7ee23dc3d426cdaf416d37c9da929d9d46d608a7ed5"
     },
     {
       "path": "scripts/ssg-public-check.mjs",
-      "size": 5774,
-      "sha256": "40bc1e1b41ae8075121a1330129622b7ef6cdb2e71b3b0eb4884810d653b6a76"
+      "size": 6212,
+      "sha256": "7f8316b817590fa21597bc27c030915424f076c18f6894aff08e07ce20e01082"
     },
     {
       "path": "tools/vcs-cli.ts",
@@ -5894,6 +5924,11 @@
       "path": ".github/workflows/ssg-practices.yml",
       "size": 1406,
       "sha256": "d347df23e1cbae0f7e77e58a5af5cfb161b12640436a52707728994fc08c5e18"
+    },
+    {
+      "path": ".agents/skills/vcs/SKILL.md",
+      "size": 8262,
+      "sha256": "e7fd1ff7bdc6ecf74e980dfc60bda2a76719408effb289d254852784bcc6d5f9"
     }
   ]
 }

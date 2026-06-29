@@ -3,7 +3,10 @@
 Standalone web app at **vcs.sigmashake.com** that lets viewers customize
 their on-stream character in the Vibe Coder Sim OBS overlay.
 
-Collaborators adding features should start with [SPEC_SHEET.md](SPEC_SHEET.md).
+Collaborators adding features should start with [SPEC_SHEET.md](SPEC_SHEET.md)
+and [AGENTS.md](AGENTS.md). Agent-assisted collaborators can load the Codex
+skill at [`.agents/skills/vcs/SKILL.md`](.agents/skills/vcs/SKILL.md) or the
+Claude Code skill at [`.claude/skills/vcs/SKILL.md`](.claude/skills/vcs/SKILL.md).
 
 > History: This project shipped as a Twitch Extension panel first, but
 > Twitch's Extension service was broken so we pivoted to a regular
