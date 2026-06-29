@@ -62,6 +62,10 @@ const RPC_ROUTE_ALLOWLIST: Record<
   { methods: ReadonlyArray<"GET" | "POST">; bodyFields?: ReadonlyArray<string> }
 > = {
   "/api/v1/vcs/me": { methods: ["GET"], bodyFields: [...VIEWER_IDENTITY] },
+  "/api/v1/vcs/brains/tick": {
+    methods: ["POST"],
+    bodyFields: [...VIEWER_IDENTITY, "scene", "stimulus", "mood", "nearby", "image_data_url"],
+  },
   "/api/v1/vcs/catalog": { methods: ["GET"], bodyFields: [] },
   "/api/v1/vcs/combat-gear": { methods: ["GET"], bodyFields: [...VIEWER_IDENTITY] },
   "/api/v1/vcs/combat-loadout": { methods: ["GET"], bodyFields: [...VIEWER_IDENTITY] },

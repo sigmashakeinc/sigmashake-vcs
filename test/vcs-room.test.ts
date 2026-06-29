@@ -232,3 +232,30 @@ describe("VcsRoom /dispatch — combat-weapons allowlist", () => {
     expect(json.reason).toBe("rpc_body_unknown_field:unknown_field");
   });
 });
+
+describe("VcsRoom /dispatch — brains tick allowlist", () => {
+  test("accepts the exact canonical brain fields", async () => {
+    const room = makeRoom({ getWebSockets: () => [] });
+    const { status, json } = await dispatchPath(room, "POST", "/api/v1/vcs/brains/tick", {
+      ...FULL_IDENTITY,
+      scene: "studio",
+      stimulus: "chat mentioned a new build",
+      mood: "curious",
+      nearby: ["chat", "boss"],
+      image_data_url: "data:image/png;base64,abc",
+    });
+    expect(status).toBe(503);
+    expect(json.error).toBe("bridge_offline");
+  });
+
+  test("rejects an unknown brain field before dispatch", async () => {
+    const room = makeRoom({ getWebSockets: () => [] });
+    const { status, json } = await dispatchPath(room, "POST", "/api/v1/vcs/brains/tick", {
+      ...FULL_IDENTITY,
+      scene: "studio",
+      plan: "escape",
+    });
+    expect(status).toBe(400);
+    expect(json.reason).toBe("rpc_body_unknown_field:plan");
+  });
+});
