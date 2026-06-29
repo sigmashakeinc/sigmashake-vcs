@@ -20,8 +20,11 @@ describe("VCS SIGMA ABYSS tab", () => {
 
   test("renders Abyss as a public VCS-owned component, not a local-network iframe", () => {
     expect(indexHtml).toContain('id="abyss-canvas"');
+    expect(indexHtml).toContain('id="abyss-map-scroll"');
+    expect(indexHtml).toContain('id="abyss-battles"');
     expect(indexHtml).toContain('id="abyss-leaderboard"');
     expect(indexHtml).toContain('id="abyss-feed"');
+    expect(indexHtml).toContain('data-abyss-pan="down"');
     expect(indexHtml).not.toContain("<iframe");
     expect(indexHtml).not.toContain("data-src=");
     expect(indexHtml).not.toContain('allow="local-network"');
@@ -33,6 +36,8 @@ describe("VCS SIGMA ABYSS tab", () => {
     expect(panelJs).toContain('"https://sigmashake-abyss.sigmashake.workers.dev"');
     expect(panelJs).toContain('fetchAbyssJson("/api/realm/snapshot")');
     expect(panelJs).toContain('fetchAbyssJson("/api/agent/world")');
+    expect(panelJs).toContain('renderAbyssList("abyss-battles"');
+    expect(panelJs).toContain("function wireAbyssMapControls()");
     expect(panelJs).not.toContain("127.0.0.1:7777");
     expect(panelJs).not.toContain("localhost");
     expect(panelJs).not.toContain("local-network");
@@ -51,7 +56,10 @@ describe("VCS SIGMA ABYSS tab", () => {
   test("keeps the spectator realm inside a fixed-height VCS panel", () => {
     expect(panelCss).toContain('.tab-panel[data-tab="abyss"]');
     expect(panelCss).toContain(".abyss-shell");
+    expect(panelCss).toContain(".abyss-map-scroll");
+    expect(panelCss).toContain("overflow: auto");
     expect(panelCss).toContain("#abyss-canvas");
+    expect(panelCss).toContain("min-width: 920px");
     expect(panelCss).toContain("min-height: 420px");
   });
 });
