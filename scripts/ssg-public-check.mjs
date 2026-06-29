@@ -77,6 +77,13 @@ function walk(dirRel, out = []) {
 }
 
 function validateNoPrivateState() {
+  const allowedClaudeFiles = new Set([
+    ".claude/skills/vcs/SKILL.md",
+    ".claude/agents/vcs-worker-api-implementer.md",
+    ".claude/agents/vcs-ui-implementer.md",
+    ".claude/agents/vcs-stream-integration-implementer.md",
+    ".claude/agents/vcs-public-collaboration-reviewer.md",
+  ]);
   const forbidden = [
     ".env",
     ".env.local",
@@ -86,7 +93,6 @@ function validateNoPrivateState() {
     "docs/oncall.toml",
     "docs/privacy",
     ".sigmashake",
-    ".claude",
     ".wrangler",
     "dist",
     "node_modules",
@@ -95,6 +101,12 @@ function validateNoPrivateState() {
   for (const entry of forbidden) {
     if (exists(entry)) {
       fail.push(`forbidden private path present: ${entry}`);
+    }
+  }
+
+  for (const file of walk(".claude")) {
+    if (!allowedClaudeFiles.has(file)) {
+      fail.push(`unexpected Claude Code metadata file: ${file}`);
     }
   }
 }
