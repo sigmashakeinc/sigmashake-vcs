@@ -33,6 +33,16 @@ viewer.get("/api/v1/vcs/me", async (c) => {
   return await dispatchToBridge(c, "GET", "/api/v1/vcs/me", viewerFields(ctx));
 });
 
+viewer.post("/api/v1/vcs/brains/tick", async (c) => {
+  const ctx = await resolveViewer(c);
+  if (!ctx) return c.json({ ok: false, error: "unauthenticated" }, 401);
+  const body = await safeJson(c.req.raw);
+  return await dispatchToBridge(c, "POST", "/api/v1/vcs/brains/tick", {
+    ...viewerFields(ctx),
+    ...brainsTickFields(body),
+  });
+});
+
 viewer.get("/api/v1/vcs/catalog", async (c) => {
   // Catalog is read-only and identical for every viewer; no auth needed
   // — but we still go through the bridge so chat-elixir owns the data.
@@ -287,6 +297,13 @@ interface ViewerLike {
   twitch_display: string;
 }
 
+const BRAINS_SCENE_MAX = 96;
+const BRAINS_STIMULUS_MAX = 512;
+const BRAINS_MOOD_MAX = 64;
+const BRAINS_NEARBY_MAX_ITEMS = 6;
+const BRAINS_NEARBY_ITEM_MAX = 64;
+const BRAINS_IMAGE_DATA_URL_MAX = 16_384;
+
 function viewerFields(v: ViewerLike): Record<string, string> {
   return {
     source: v.source,
@@ -299,8 +316,41 @@ function viewerFields(v: ViewerLike): Record<string, string> {
   };
 }
 
+function brainsTickFields(body: Record<string, unknown>): Record<string, unknown> {
+  const payload: Record<string, unknown> = {};
+  const scene = clampedOptionalString(body.scene, BRAINS_SCENE_MAX);
+  const stimulus = clampedOptionalString(body.stimulus, BRAINS_STIMULUS_MAX);
+  const mood = clampedOptionalString(body.mood, BRAINS_MOOD_MAX);
+  const nearby = clampedNearby(body.nearby);
+  const imageDataUrl = clampedOptionalString(body.image_data_url, BRAINS_IMAGE_DATA_URL_MAX);
+  if (scene) payload.scene = scene;
+  if (stimulus) payload.stimulus = stimulus;
+  if (mood) payload.mood = mood;
+  if (nearby) payload.nearby = nearby;
+  if (imageDataUrl) payload.image_data_url = imageDataUrl;
+  return payload;
+}
+
 function stringOrEmpty(v: unknown): string {
   return typeof v === "string" ? v : "";
+}
+
+function clampedOptionalString(v: unknown, max: number): string | undefined {
+  if (typeof v !== "string") return undefined;
+  const trimmed = v.trim();
+  if (!trimmed) return undefined;
+  return trimmed.slice(0, max);
+}
+
+function clampedNearby(v: unknown): string[] | undefined {
+  if (!Array.isArray(v)) return undefined;
+  const nearby = v
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .slice(0, BRAINS_NEARBY_MAX_ITEMS)
+    .map((item) => item.slice(0, BRAINS_NEARBY_ITEM_MAX));
+  return nearby.length > 0 ? nearby : undefined;
 }
 
 async function safeJson(req: Request): Promise<Record<string, unknown>> {

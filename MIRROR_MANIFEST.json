@@ -1,8 +1,8 @@
 {
   "schema": "sigmashake-vcs-public-mirror-manifest-v1",
-  "source_commit": "d0b854e8c5d240288e2edf3a93db77d23e362968",
+  "source_commit": "b2dbfb0633e4300b9f165abdbed7e1e332265f90",
   "source_rel": "sigmashake-vcs",
-  "generated_at": "2026-06-29T01:09:34.480119+00:00",
+  "generated_at": "2026-06-29T01:44:51.371701+00:00",
   "transform_version": "public-mirror-v1",
   "scanner_versions": {
     "gitleaks": "version is set by build process",
@@ -37,13 +37,18 @@
     },
     {
       "path": "README.md",
-      "size": 8594,
-      "sha256": "bc625f444773ac3cd4650aaad50a8219671db2dc2aa561b03fb1392021826187"
+      "size": 9654,
+      "sha256": "52ec59bf35e9f54d6e13ab1e9e13647bd2ee4729856a731ca54e4550d7a93918"
     },
     {
       "path": "RUNBOOK.md",
       "size": 5519,
       "sha256": "e187e050bf7be468bef20649f18882f7bfa3dc41bdaa3c1781914b0c368e9104"
+    },
+    {
+      "path": "SPEC_SHEET.md",
+      "size": 14053,
+      "sha256": "9543bb655897f8ce3d93d91198f8892609bc3a014e803bcdae30e5f965db1a72"
     },
     {
       "path": "SSG.md",
@@ -97,8 +102,8 @@
     },
     {
       "path": "src/vcs-room.ts",
-      "size": 13596,
-      "sha256": "4aa04525ef44bed294df10b40e40c94b08016efadab57e7a2757621a36d3542d"
+      "size": 13750,
+      "sha256": "603276634b6ba59eae459309cdd2fb3dbcdb4481b5b090c5445b96ece7170a24"
     },
     {
       "path": "src/lib/api-key.ts",
@@ -147,8 +152,8 @@
     },
     {
       "path": "src/routes/viewer.ts",
-      "size": 12453,
-      "sha256": "9334cd8fe28a50136e5394314a717940a3beefee11d893157e1846d769ca68e7"
+      "size": 14329,
+      "sha256": "9aedb675e9f83a4818b6e67d31d7dd4b30acceb3016220413e2b93c04ea6529a"
     },
     {
       "path": "static/index.html",
@@ -5787,8 +5792,8 @@
     },
     {
       "path": "test/routes.test.ts",
-      "size": 52015,
-      "sha256": "75ff79b62cd077c05775f8e57e296d170816b421a270db627dd74e3f691978ca"
+      "size": 58231,
+      "sha256": "c5c1bbf6d58ae1a16a1b388a0f3e4865de7a2814c22a94377f71f6b78e22666c"
     },
     {
       "path": "test/session.test.ts",
@@ -5797,8 +5802,8 @@
     },
     {
       "path": "test/vcs-room.test.ts",
-      "size": 8948,
-      "sha256": "2edeb56ea54c375938b9820bc6e6d7a03c23adcb78104c5a5846645a2a92d296"
+      "size": 9912,
+      "sha256": "44b8be3fe691d981dacf30212899bff55deb168894a3b00a1ce8769fcfa4180b"
     },
     {
       "path": "test/configuration/vcs.configuration.test.ts",
